@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kunwari Landslide - Before & After</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
+            overflow-y: auto;
+            height: auto;
+        }
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            background-color: #111;
+            z-index: 10;
+            padding: 2px 0;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+        }
+
+        .image1, .image2 {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .image2 {
+            clip-path: inset(100% 0 0 0);
+        }
+
+        .slider-bar {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: black;
+            cursor: pointer;
+            opacity: 1;
+            z-index: 10;
+        }
+
+        .label {
+            position: absolute;
+            color: white;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0);
+            padding: 5px 10px;
+            margin: 0;
+            border-radius: 5px;
+            font-size: 9px;
+            transform: translateX(-50%);
+            transition: opacity 0.2s ease;
+            left: 25%;
+        }
+
+        h3 {
+            color: #ffcc00;
+            margin: 0;
+        }
+
+        .swipe-text {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .image-container {
+                height: 400px;
+                max-height: 60vh;
+            }
+
+            .image1, .image2 {
+                object-fit: contain;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <h3 class="title">Kunwari Landslide</h3>
+            <h3 class="title">(Bageshwar, Uttarakhand)</h3>
+
+            <!-- Image Slider Sections -->
+            <div class="image-container">
+                <img src="Post1.png" alt="After Landslide" class="image1">
+                <img src="Pre1.png" alt="Before Landslide" class="image2">
+                <div class="slider-bar"></div>
+            </div>
+
+            <div class="image-container">
+                <img src="Post2.png" alt="After Landslide" class="image1">
+                <img src="Pre2.png" alt="Before Landslide" class="image2">
+                <div class="slider-bar"></div>
+            </div>
+
+            <div class="image-container">
+                <img src="Post3.png" alt="After Landslide" class="image1">
+                <img src="Pre3.png" alt="Before Landslide" class="image2">
+                <div class="slider-bar"></div>
+            </div>
+
+            <div class="image-container">
+                <img src="Post4.png" alt="After Landslide" class="image1">
+                <img src="Pre4.png" alt="Before Landslide" class="image2">
+                <div class="slider-bar"></div>
+            </div>
+
+            <div class="image-container">
+                <img src="Post5.png" alt="After Landslide" class="image1">
+                <img src="Pre5.png" alt="Before Landslide" class="image2">
+                <div class="slider-bar"></div>
+            </div>
+
+            <p class="swipe-text">(Swipe up or down to see the visualization)</p>
+        </div>
+    </div>
+
+    <script>
+        let isDragging = false;
+        let startY = 0;
+        let position = 50;
+
+        function updateClipPath(image2, sliderBar) {
+            image2.style.clipPath = `inset(${position}% 0 0 0)`;
+            sliderBar.style.top = `${position}%`;
+        }
+
+        function startDrag(event, image2, sliderBar) {
+            isDragging = true;
+            startY = event.clientY || event.touches[0].clientY;
+            event.preventDefault();
+        }
+
+        function dragMove(event, image2, sliderBar) {
+            if (!isDragging) return;
+            let moveY = event.clientY || event.touches[0].clientY;
+            let diff = startY - moveY;
+            position = Math.max(0, Math.min(100, position - diff / 5));
+            updateClipPath(image2, sliderBar);
+            startY = moveY;
+            event.preventDefault();
+        }
+
+        function endDrag() {
+            isDragging = false;
+        }
+
+        document.querySelectorAll('.image-container').forEach(container => {
+            const image2 = container.querySelector('.image2');
+            const sliderBar = container.querySelector('.slider-bar');
+
+            container.addEventListener('mousedown', event => startDrag(event, image2, sliderBar));
+            document.addEventListener('mousemove', event => dragMove(event, image2, sliderBar));
+            document.addEventListener('mouseup', endDrag);
+            container.addEventListener('touchstart', event => startDrag(event, image2, sliderBar));
+            document.addEventListener('touchmove', event => dragMove(event, image2, sliderBar), { passive: false });
+            document.addEventListener('touchend', endDrag);
+        });
+    </script>
+</body>
+</html>
